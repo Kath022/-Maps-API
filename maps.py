@@ -20,6 +20,10 @@ def geocode_maps(toponym_to_find):
         "featureMember"][0]["GeoObject"]
     toponym_coodrinates = toponym["Point"]["pos"].split()
 
+    corner = toponym['boundedBy']['Envelope']
+    print(toponym_coodrinates)
+    print(corner)
+
     return toponym_coodrinates
 
 
