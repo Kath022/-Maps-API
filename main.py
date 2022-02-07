@@ -5,7 +5,12 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtCore import Qt
 import maps
 
+from PIL import Image
+
 file_map = 'map.png'
+TYPE_MAP = {'схема': 'map',
+            'спутник': 'sat',
+            'гибрид': 'sat,skl'}
 
 
 class Window(QMainWindow):
@@ -13,18 +18,29 @@ class Window(QMainWindow):
         super().__init__()
         uic.loadUi('on.ui', self)
 
-        self.coords = [0, 0]
+        self.coords = None
 
-        self.show_btn.clicked.connect(self.show_map)
+        self.type_map.addItems(TYPE_MAP.keys())
+
+        self.show_btn.clicked.connect(self.new_place)
         self.scale.textChanged.connect(self.show_map)
+        self.type_map.currentIndexChanged.connect(self.show_map)
 
-    def show_map(self, change_coords=False):
+    def new_place(self):
         place = self.lineEdit.text()
-        if not change_coords:
-            self.coords = maps.geocode_maps(place)
-        im_bit = maps.static_api(self.coords, self.scale.value())
+        self.coords = maps.geocode_maps(place)
+        self.show_map()
+
+    def show_map(self):
+        if self.coords is None:
+            return
+        im_bit = maps.static_api(self.coords, self.scale.value(), TYPE_MAP[self.type_map.currentText()])
         with open(file_map, 'wb') as f:
             f.write(im_bit)
+
+        im = Image.open(file_map)
+        im = im.resize((650, 450))
+        im.save(file_map)
 
         self.pixmap = QPixmap(file_map)
         self.label.setPixmap(self.pixmap)
@@ -41,22 +57,22 @@ class Window(QMainWindow):
 
         elif event.key() == Qt.Key_W:
             self.coords[1] = str(float(self.coords[1]) + step1 * 2 ** (17 - self.scale.value()))
-            self.show_map(change_coords=True)
+            self.show_map()
 
         elif event.key() == Qt.Key_S:
             self.coords[1] = str(float(self.coords[1]) - step1 * 2 ** (17 - self.scale.value()))
             # print(self.coords)
-            self.show_map(change_coords=True)
+            self.show_map()
 
         elif event.key() == Qt.Key_A:
             self.coords[0] = str(float(self.coords[0]) - step0 * 2 ** (17 - self.scale.value()))
             # print(self.coords)
-            self.show_map(change_coords=True)
+            self.show_map()
 
         elif event.key() == Qt.Key_D:
             self.coords[0] = str(float(self.coords[0]) + step0 * 2 ** (17 - self.scale.value()))
             # print(self.coords)
-            self.show_map(change_coords=True)
+            self.show_map()
 
 
 def except_hook(cls, exception, traceback):

@@ -21,8 +21,8 @@ def geocode_maps(toponym_to_find):
     toponym_coodrinates = toponym["Point"]["pos"].split()
 
     corner = toponym['boundedBy']['Envelope']
-    print(toponym_coodrinates)
-    print(corner)
+    # print(toponym_coodrinates)
+    # print(corner)
 
     return toponym_coodrinates
 
@@ -52,12 +52,12 @@ def search_maps(address_ll):
     return json_response
 
 
-def static_api(coords, scale):
+def static_api(coords, scale, l):
     map_api_server = "http://static-maps.yandex.ru/1.x/"
     map_params = {
         "ll": ','.join(coords),
         "z": scale,
-        "l": "map",
+        "l": l,
         # "pt": f"{org_point},pm2dgl~{address_ll},home"
     }
     response = requests.get(map_api_server, params=map_params)
