@@ -37,6 +37,7 @@ class Window(QMainWindow):
 
     def resert_mark(self):
         self.search_coords = ''
+        self.lineEdit.clear()
         self.change_map()
 
     def change_map(self):
