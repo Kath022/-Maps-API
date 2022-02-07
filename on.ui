@@ -37,7 +37,7 @@
        <item>
         <widget class="QPushButton" name="show_btn">
          <property name="text">
-          <string>Показать</string>
+          <string>Искать</string>
          </property>
         </widget>
        </item>

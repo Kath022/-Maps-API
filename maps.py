@@ -52,13 +52,16 @@ def search_maps(address_ll):
     return json_response
 
 
-def static_api(coords, scale, l):
+def static_api(coords, scale, l, pt=''):
+    if pt != '':
+        pt += ',pm2dom'
+
     map_api_server = "http://static-maps.yandex.ru/1.x/"
     map_params = {
-        "ll": ','.join(coords),
+        "ll": coords,
         "z": scale,
         "l": l,
-        # "pt": f"{org_point},pm2dgl~{address_ll},home"
+        "pt": pt
     }
     response = requests.get(map_api_server, params=map_params)
 
