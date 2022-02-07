@@ -26,12 +26,17 @@ class Window(QMainWindow):
         self.show_btn.clicked.connect(self.search_place)
         self.scale.textChanged.connect(self.change_map)
         self.type_map.currentIndexChanged.connect(self.change_map)
+        self.resert_btn.clicked.connect(self.resert_mark)
 
     def search_place(self):
         place = self.lineEdit.text()
         self.coords = maps.geocode_maps(place)
         self.search_coords = ','.join(self.coords)
 
+        self.change_map()
+
+    def resert_mark(self):
+        self.search_coords = ''
         self.change_map()
 
     def change_map(self):
